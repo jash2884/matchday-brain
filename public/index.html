@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matchday Brain</title>
+  <meta name="description" content="Football match predictions from an Elo model, with honest, publicly scored accuracy." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2316a34a'/><path d='M16 7l5 4-2 6h-6l-2-6z' fill='white'/></svg>" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand" href="/" aria-label="Matchday Brain home"><span class="ball" aria-hidden="true"></span>Matchday<span>Brain</span></a>
+      <nav class="tabs" aria-label="Sections">
+        <button data-tab="next" class="tab active">Next up</button>
+        <button data-tab="ratings" class="tab">Power ratings</button>
+        <button data-tab="accuracy" class="tab">How accurate am I?</button>
+        <button data-tab="how" class="tab">How it works</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>Football predictions that <em>show their homework</em>.</h1>
+      <p>An Elo rating model predicts every match in Europe's top five leagues, explains each call in plain English, and publishes how often it is right, scored only on seasons it never saw while being tuned.</p>
+      <div class="leagues" role="tablist" aria-label="League"></div>
+    </section>
+
+    <p class="notice" id="notice" hidden></p>
+    <div id="status" class="status" role="status">Loading…</div>
+
+    <section id="tab-next" class="panel"></section>
+    <section id="tab-ratings" class="panel" hidden></section>
+    <section id="tab-accuracy" class="panel" hidden></section>
+    <section id="tab-how" class="panel" hidden>
+      <div class="card prose">
+        <h2>How it works</h2>
+        <p><strong>Ratings.</strong> Every team has an Elo rating. After each match the winner takes points from the loser; bigger wins move ratings more, and upsets move them most. Home teams get a fixed rating boost.</p>
+        <p><strong>Probabilities.</strong> The rating gap becomes an expected score, which is split into home win, draw and away win. Draws are most likely when teams are evenly matched.</p>
+        <p><strong>No hindsight.</strong> Each prediction uses only matches played before it, exactly as if it had been made on match day. Between seasons ratings drift back toward average, and newly promoted teams start below it.</p>
+        <p><strong>Honest scoring.</strong> The model's settings were tuned on the 2024&ndash;25 season only. Accuracy is reported on later seasons, which the model never saw during tuning, and compared with two simple baselines.</p>
+        <p><strong>Data.</strong> Fixtures and results come from <a href="https://github.com/openfootball/football.json">openfootball</a>, a free, community-maintained dataset. Results can lag behind real life; the date of the latest result is shown at the top.</p>
+        <p class="muted">Built by <a href="https://jashparmar.com">Jash Parmar</a> &middot; <a href="https://github.com/jash2884/matchday-brain">Source on GitHub</a>. For fun and learning, not betting advice.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap foot">Data: openfootball (CC0) &middot; Model: Elo with walk-forward evaluation &middot; <a href="https://jashparmar.com">jashparmar.com</a></footer>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "matchday-brain",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=23.6" },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "fit": "node scripts/fit.ts",
+    "evaluate": "node scripts/evaluate.ts",
+    "dev": "npx wrangler@4 dev",
+    "deploy": "npx wrangler@4 deploy"
+  }
+}
