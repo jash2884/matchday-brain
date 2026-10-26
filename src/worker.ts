@@ -2,8 +2,11 @@
 // precomputed snapshots. Request-time work is limited to cheap lookups.
 import { expectedHome, outcomeProbs, pickOf } from "./core/elo.ts";
 import type { CompetitionSnapshot } from "./core/types.ts";
+import { type AnalyticsEnv, type Ctx, recordEvent, recordPageview } from "./analytics.ts";
 
-type Env = { ASSETS: { fetch: (request: Request | string) => Promise<Response> } };
+type Env = AnalyticsEnv & { ASSETS: { fetch: (request: Request | string) => Promise<Response> } };
+
+const SITE = "matchday";
 
 const API_CACHE = "public, max-age=300, stale-while-revalidate=3600";
 
@@ -29,10 +32,12 @@ async function snapshot(env: Env, origin: string, sport: string, comp: string): 
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: Ctx): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, "");
 
+    // Cookieless visit counting shared with Chat Wrapped (see src/analytics.ts).
+    if (url.pathname === "/" && request.method === "GET") ctx.waitUntil(recordPageview(env, request, SITE));
     if (!path.startsWith("/api/")) return env.ASSETS.fetch(request);
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, OPTIONS" } });
     if (request.method !== "GET") return json({ error: "Method not allowed." }, 405, "no-store");
@@ -61,6 +66,7 @@ export default {
     const p = snap.params;
     const e = expectedHome(ratings.get(home)!, ratings.get(away)!, neutral ? 0 : p.home, p.scale ?? 400);
     const probs = outcomeProbs(e, p);
+    ctx.waitUntil(recordEvent(env, SITE, "predict"));
     return json({ home, away, neutral, ratingHome: ratings.get(home), ratingAway: ratings.get(away), probs, pick: pickOf(probs), basedOn: snap.updatedThrough });
   },
 };

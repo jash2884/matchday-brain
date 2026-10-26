@@ -2,7 +2,9 @@
   "name": "matchday-brain",
   "main": "src/worker.ts",
   "compatibility_date": "2026-10-01",
-  "assets": { "directory": "./public", "binding": "ASSETS" },
+  "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/", "/api/*"] },
+  // Shared with Chat Wrapped: cookieless daily counters (see src/analytics.ts).
+  "d1_databases": [{ "binding": "DB", "database_name": "site-analytics", "database_id": "23c80596-1890-4554-bc3e-8aa0d90d12e3" }],
   "routes": [{ "pattern": "matchday.jashparmar.com", "custom_domain": true }],
   "workers_dev": false,
   "observability": { "enabled": true }
